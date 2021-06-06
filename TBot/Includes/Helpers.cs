@@ -429,28 +429,45 @@ namespace Tbot.Includes
             return (long)(1 + Math.Round(tempFuel, MidpointRounding.AwayFromZero));
         }
 
-        public static Resources CalcMaxTransportableResources(Ships ships, Resources resources, int hyperspaceTech, Classes playerClass, long deuttoleave = 0)
+        public static Resources CalcMaxTransportableResources(Ships ships, Resources resources, int hyperspaceTech, Classes playerClass, long deuttoleave = 0, bool skipdeut = false)
         {
             var capacity = CalcFleetCapacity(ships, hyperspaceTech, playerClass);
             if (resources.TotalResources <= capacity)
             {
-                return new Resources { Deuterium = resources.Deuterium - deuttoleave, Crystal = resources.Crystal, Metal = resources.Metal };
+                if (skipdeut){ return new Resources {                                                Crystal = resources.Crystal, Metal = resources.Metal }; }
+                else           return new Resources { Deuterium = resources.Deuterium - deuttoleave, Crystal = resources.Crystal, Metal = resources.Metal };
             }
             else
             {
-                if (resources.Deuterium - deuttoleave > capacity)
+                if (skipdeut)
                 {
-                    return new Resources { Deuterium = capacity };
+                    if (resources.Crystal > capacity)
+                    {
+                        return new Resources { Crystal = capacity };
+                    }
+                    else if (capacity >= resources.Crystal && capacity < (resources.TotalResources - resources.Deuterium))
+                    {
+                        return new Resources {  Crystal = resources.Crystal, Metal = (capacity - resources.Crystal) };
+                    }
+                    else return new Resources { Crystal = resources.Crystal, Metal = resources.Metal };
+
                 }
-                else if (capacity >= resources.Deuterium - deuttoleave && capacity < (resources.Deuterium - deuttoleave + resources.Crystal))
+                else
                 {
-                    return new Resources { Deuterium = resources.Deuterium - deuttoleave, Crystal = (capacity - resources.Deuterium + deuttoleave) };
+                    if (resources.Deuterium - deuttoleave > capacity)
+                    {
+                        return new Resources { Deuterium = capacity };
+                    }
+                    else if (capacity >= resources.Deuterium - deuttoleave && capacity < (resources.Deuterium - deuttoleave + resources.Crystal))
+                    {
+                        return new Resources { Deuterium = resources.Deuterium - deuttoleave, Crystal = (capacity - resources.Deuterium + deuttoleave) };
+                    }
+                    else if (capacity >= (resources.Deuterium - deuttoleave + resources.Crystal) && capacity < resources.TotalResources)
+                    {
+                        return new Resources { Deuterium = resources.Deuterium - deuttoleave, Crystal = resources.Crystal, Metal = (capacity - resources.Deuterium + deuttoleave - resources.Crystal) };
+                    }
+                    else return resources;
                 }
-                else if (capacity >= (resources.Deuterium - deuttoleave + resources.Crystal) && capacity < resources.TotalResources)
-                {
-                    return new Resources { Deuterium = resources.Deuterium - deuttoleave, Crystal = resources.Crystal, Metal = (capacity - resources.Deuterium + deuttoleave - resources.Crystal) };
-                }
-                else return resources;
             }
         }
 

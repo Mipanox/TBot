@@ -98,6 +98,7 @@
       "Active": true,
       "ExcludeMoons": true,
       "MinimumResources": 1000000,
+      "SkipDeut": false,
       "DeutToLeave": 1000000,
       "Target": {
         "Galaxy": 5,

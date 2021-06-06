@@ -1245,7 +1245,7 @@ namespace Tbot
                     {
                         ships.Add(preferredShip, celestial.Ships.GetAmount(preferredShip));
                     }
-                    Resources payload = Helpers.CalcMaxTransportableResources(ships, celestial.Resources, researches.HyperspaceTechnology, userInfo.Class, settings.Brain.AutoRepatriate.DeutToLeave);
+                    Resources payload = Helpers.CalcMaxTransportableResources(ships, celestial.Resources, researches.HyperspaceTechnology, userInfo.Class, settings.Brain.AutoRepatriate.DeutToLeave, settings.Brain.AutoRepatriate.SkipDeut);
                     Celestial destination = celestials
                                 .OrderBy(planet => planet.Coordinate.Type == Celestials.Moon)
                                 .OrderByDescending(planet => Helpers.CalcFleetCapacity(planet.Ships, researches.HyperspaceTechnology, userInfo.Class))
