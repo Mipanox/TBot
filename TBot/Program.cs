@@ -1233,6 +1233,12 @@ namespace Tbot
                         Helpers.WriteLog(LogType.Info, LogSender.Brain, "Skipping celestial: resources under set limit");
                         continue;
                     }
+                    if (celestial.Resources.Deuterium < (int)settings.Brain.AutoRepatriate.DeutToLeave)
+                    {
+                        Helpers.WriteLog(LogType.Info, LogSender.Brain, "Skipping celestial: deuterium under set limit");
+                        continue;
+                    }
+
                     Buildables preferredShip = Buildables.SmallCargo;
                     Enum.TryParse<Buildables>((string)settings.Brain.AutoCargo.CargoType, true, out preferredShip);
                     long idealShips = Helpers.CalcShipNumberForPayload(celestial.Resources, preferredShip, researches.HyperspaceTechnology, userInfo.Class);
