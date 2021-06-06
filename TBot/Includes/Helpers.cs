@@ -432,7 +432,12 @@ namespace Tbot.Includes
         public static Resources CalcMaxTransportableResources(Ships ships, Resources resources, int hyperspaceTech, Classes playerClass, long deuttoleave = 0, bool skipdeut = false)
         {
             var capacity = CalcFleetCapacity(ships, hyperspaceTech, playerClass);
-            if (resources.TotalResources <= capacity)
+            if (resources.Deuterium <= deuttoleave)
+            {
+                return new Resources { Deuterium = 0, Crystal = 0, Metal = 0 }; // don't transport if not enough deutereum left
+            }
+
+            else if (resources.TotalResources <= capacity)
             {
                 if (skipdeut){ return new Resources {                                                Crystal = resources.Crystal, Metal = resources.Metal }; }
                 else           return new Resources { Deuterium = resources.Deuterium - deuttoleave, Crystal = resources.Crystal, Metal = resources.Metal };
